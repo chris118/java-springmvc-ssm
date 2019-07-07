@@ -20,11 +20,27 @@ public class UserServiceImpl implements UserService {
 
     private static List<User> users;
 
-    public List<User> findAllUsers() {
-        return users;
+    public List<User> getAllUsers() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = DBUtils.openSqlSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<User> users = userMapper.getAllUsers();
+            sqlSession.commit();
+
+            return users;
+        } catch (Exception e) {
+            e.printStackTrace();
+            sqlSession.rollback();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+        return null;
     }
 
-    public User findById(long id) {
+    public User findUserById(Long id) {
         SqlSession sqlSession = null;
         try {
             sqlSession = DBUtils.openSqlSession();
@@ -46,40 +62,48 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    public User findByName(String name) {
-        for(User user : users){
-            if(user.getName().equalsIgnoreCase(name)){
-                return user;
+    public void insertUser(User user) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = DBUtils.openSqlSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.insertUser(user);
+
+            System.out.println(user.toString());
+            sqlSession.commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            sqlSession.rollback();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
             }
         }
-        return null;
     }
 
-    public void saveUser(User user) {
-        user.setId(counter.incrementAndGet());
-        users.add(user);
+    public boolean deleteUserById(Long id) {
+
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = DBUtils.openSqlSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.deleteUser(id);
+            sqlSession.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            sqlSession.rollback();
+            return false;
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+        return true;
     }
 
     public void updateUser(User user) {
         int index = users.indexOf(user);
         users.set(index, user);
-    }
-
-    public void deleteUserById(long id) {
-
-        for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {
-            User user = iterator.next();
-            if (user.getId() == id) {
-                iterator.remove();
-            }
-        }
-    }
-
-    public boolean isUserExist(User user) {
-        return findByName(user.getName())!=null;
-    }
-
-    public void deleteAllUsers() {
-        users.clear();
     }
 }

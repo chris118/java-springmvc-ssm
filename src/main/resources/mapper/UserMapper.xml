@@ -3,11 +3,22 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhit.springmvc.mapper.UserMapper">
+    <resultMap type="com.hhit.springmvc.model.User" id="baseResultMap">
+        <result column="name" property="name"/>
+        <result column="age"  property="age"/>
+        <result column="salary"  property="salary"/>
+    </resultMap>
+    <select id="getAllUsers" resultMap="baseResultMap">
+        select * from user
+    </select>
     <select id="getUser" resultType="user" parameterType="Long">
         select * from user where id = #{id}
     </select>
     <insert id="insertUser" parameterType="user">
-        INSERT INTO user(username,password,address) VALUES (#{username},#{password},#{address})
+        INSERT INTO user(name,age,salary) VALUES (#{name},#{age},#{salary})
+        <selectKey resultType="Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
     </insert>
     <delete id="deleteUser" parameterType="Long">
         DELETE FROM user where id=#{id}

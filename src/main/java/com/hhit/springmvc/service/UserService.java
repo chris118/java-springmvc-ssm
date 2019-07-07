@@ -5,19 +5,13 @@ import com.hhit.springmvc.model.User;
 import java.util.List;
 
 public interface UserService {
-    User findById(long id);
+    List<User> getAllUsers();
 
-    User findByName(String name);
+    User findUserById(Long id);
 
-    void saveUser(User user);
+    void insertUser(User user);
+
+    boolean deleteUserById(Long id);
 
     void updateUser(User user);
-
-    void deleteUserById(long id);
-
-    List<User> findAllUsers();
-
-    void deleteAllUsers();
-
-    public boolean isUserExist(User user);
 }

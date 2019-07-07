@@ -3,10 +3,14 @@ package com.hhit.springmvc.mapper;
 
 import com.hhit.springmvc.model.User;
 
+import java.util.List;
+
 public interface UserMapper {
-    public User getUser(Long id);
+    List<User> getAllUsers();
 
-    public int insertUser(User user);
+    User getUser(Long id);
 
-    public int deleteUser(Long id);
+    int insertUser(User user);
+
+    int deleteUser(Long id);
 }
