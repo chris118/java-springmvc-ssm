@@ -74,4 +74,20 @@ public class UserController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    //-------------------update User--------------------------------------------------------
+
+    @RequestMapping(value = "/user/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateUser(@RequestBody User user, UriComponentsBuilder ucBuilder) {
+        System.out.println("update User");
+        userService.updateUser(user);
+
+        User userResult = userService.findUserById(user.getId());
+        if (userResult == null) {
+            System.out.println("failed to update user");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }

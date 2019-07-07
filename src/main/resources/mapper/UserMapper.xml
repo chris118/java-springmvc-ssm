@@ -23,4 +23,15 @@
     <delete id="deleteUser" parameterType="Long">
         DELETE FROM user where id=#{id}
     </delete>
+    <update id="updateUser" parameterType="com.hhit.springmvc.model.User" >
+        update user
+        <set >
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            age = #{age,jdbcType=INTEGER},
+            salary = #{salary,jdbcType=INTEGER},
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

@@ -102,8 +102,22 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    public void updateUser(User user) {
-        int index = users.indexOf(user);
-        users.set(index, user);
+    public boolean updateUser(User user) {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = DBUtils.openSqlSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            userMapper.updateUser(user);
+            sqlSession.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            sqlSession.rollback();
+            return false;
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+        return true;
     }
 }
